@@ -53,7 +53,11 @@ import org.artoolkit.ar.base.ARToolKit;
 import org.artoolkit.ar.base.rendering.ARRenderer;
 import org.artoolkit.ar.base.rendering.Cube;
 
+import java.util.Arrays;
+
 import javax.microedition.khronos.opengles.GL10;
+
+import william.chamberlain.utils.StringUtil;
 
 /**
  * A very simple Renderer that adds a marker and draws a cube on it.
@@ -68,10 +72,25 @@ public class SimpleRenderer extends ARRenderer {
      */
     @Override
     public boolean configureARScene() {
+//        String[] configLines = new String[] {
+//            "single;Data/hiro.patt;80",
+//            "single;Data/4x4_49.patt;80",
+//            "single;Data/boofcv_210.patt;80",
+//            "single;Data/boofcv_210_neg.patt;80"};
+//        for (String line : configLines) {
+//            addMarkerAndLog(line);
+//        }
+        addMarkerAndLog("single;Data/boofcv_210_neg.patt;80");
+        return true;
+    }
 
-        markerID = ARToolKit.getInstance().addMarker("single;Data/hiro.patt;80");
-        if (markerID < 0) return false;
-
+    private boolean addMarkerAndLog(String configLine_) {
+        markerID = ARToolKit.getInstance().addMarker(configLine_);
+        if (markerID < 0) {
+            System.out.println("addMarkerAndLog: FAIL: could not add marker : '"+configLine_+"'.");
+            return false;
+        }
+        System.out.println("addMarkerAndLog: SUCCESS: added marker : '"+configLine_+"'.");
         return true;
     }
 
@@ -80,6 +99,7 @@ public class SimpleRenderer extends ARRenderer {
      */
     @Override
     public void draw(GL10 gl) {
+        System.out.println("draw: start");
 
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
@@ -94,10 +114,23 @@ public class SimpleRenderer extends ARRenderer {
 
         // If the marker is visible, apply its transformation, and draw a cube
         if (ARToolKit.getInstance().queryMarkerVisible(markerID)) {
+            System.out.println("draw: detected marker with internal id "+markerID);
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
+//            float[] transformMatrix = getTransformToMarker();
+//            String data = ""+markerID+" at rot \n"+ StringUtil.toStringByRows(transformMatrix,4);
+//            System.out.println(data);
+//            ARSimpleApplication.getARInstance().saveData(data);
+//            gl.glLoadMatrixf(transformMatrix, 0);
             cube.draw(gl);
+        } else {
+            System.out.println("draw: failed to detect marker with internal id "+markerID);
         }
 
+        System.out.println("draw: end");
+    }
+
+    private float[] getTransformToMarker() {
+        return ARToolKit.getInstance().queryMarkerTransformation(markerID);
     }
 }

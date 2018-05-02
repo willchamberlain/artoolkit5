@@ -346,15 +346,20 @@ public class ARToolKit {
      */
     public boolean convertAndDetect1(byte[] frame, int frameSize) {
 
+        if ( !isNativeInited() ) { Log.e(TAG,"convertAndDetect: initedNative FAILED"); return false; }
+        if ( frame == null ) { Log.e(TAG,"convertAndDetect: frame == null FAILED"); return false; }
+
         if ((!isNativeInited()) || (frame == null)) {
             return false;
         }
 
         if (NativeInterface.arwAndroidVideoPush1(0, frame, frameSize) < 0) {
+			Log.e(TAG,"convertAndDetect: NativeInterface.arwAndroidVideoPush1 FAILED");
             return false;
         }
         //noinspection SimplifiableIfStatement
         if (!NativeInterface.arwCapture()) {
+			Log.e(TAG,"convertAndDetect1: arwCapture FAILED"); 
             return false;
         }
         return NativeInterface.arwUpdateAR();

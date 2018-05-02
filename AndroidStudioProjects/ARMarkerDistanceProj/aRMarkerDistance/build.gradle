@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion = 24
-    buildToolsVersion = "24.0.3"
+    compileSdkVersion = 25 // The version of the Android API, i.e. SDK, the app is compiled against
+    buildToolsVersion = "25.0.2" // The downloaded version of the Build Tools used to build Android application code
 
     defaultConfig {
         applicationId = "org.ar.artoolkit.org.ARMarkerdistance"

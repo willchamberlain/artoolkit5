@@ -370,15 +370,23 @@ public abstract class ARActivity extends /*AppCompat*/Activity implements Camera
         }
 
         if (ARToolKit.getInstance().convertAndDetect1(frame, frameSize)) {
+            Log.i(TAG, "cameraPreviewFrame(): convertAndDetect OK ");
 
             // Update the renderer as the frame has changed
-            if (glView != null)
+            if (glView != null) {
+                Log.i(TAG, "cameraPreviewFrame(): glView != null ");
                 glView.requestRender();
+            } else {
+                Log.e(TAG, "cameraPreviewFrame(): glView == null ");
+            }
             onFrameProcessed();
+        } else {
+            Log.e(TAG, "cameraPreviewFrame(): convertAndDetect FAILED ");
         }
     }
 
     public void onFrameProcessed() {
+        Log.i(TAG, "onFrameProcessed(): implementation is null ");
     }
 
     @Override
